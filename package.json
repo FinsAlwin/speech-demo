@@ -1,6 +1,9 @@
 {
   "name": "starter-bt5",
   "version": "0.1.0",
+  "engines": {
+    "node": "16.15.1"
+  },
   "private": true,
   "dependencies": {
     "@mediapipe/camera_utils": "^0.3.1640029074",

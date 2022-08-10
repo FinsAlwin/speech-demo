@@ -27,6 +27,7 @@ const servers = {
 
 let constraints = {
   video: {
+    facingMode: "user",
     width: { min: 640, ideal: 1920, max: 1920 },
     height: { min: 480, ideal: 1080, max: 1080 },
   },
@@ -50,8 +51,33 @@ const Call = () => {
 
     client.on("MessageFromPeer", handleMessageFromPeer);
 
-    localStream = await navigator.mediaDevices.getUserMedia(constraints);
-    document.getElementById("user-1").srcObject = localStream;
+    await navigator.permissions
+      .query({ name: "microphone" })
+      .then((permissionObj) => {
+        console.log(permissionObj.state);
+      })
+      .catch((error) => {
+        console.log("Got error :", error);
+      });
+
+    navigator.permissions
+      .query({ name: "camera" })
+      .then((permissionObj) => {
+        console.log(permissionObj.state);
+      })
+      .catch((error) => {
+        console.log("Got error :", error);
+      });
+
+    await navigator.mediaDevices
+      .getUserMedia(constraints)
+      .then((stream) => {
+        localStream = stream;
+        document.getElementById("user-1").srcObject = localStream;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   });
 
   const handleUserLeft = (MemberId) => {

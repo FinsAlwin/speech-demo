@@ -22,6 +22,11 @@ const FullLayout = () => {
           </Container>
         </div>
       </div>
+      <footer className="text-center text-lg-start bg-light text-muted">
+        <div className="text-center p-4" style={{ backgroundColor: "#0d6efd" }}>
+          <span className="text-white"> By Alwin WK</span>
+        </div>
+      </footer>
     </main>
   );
 };

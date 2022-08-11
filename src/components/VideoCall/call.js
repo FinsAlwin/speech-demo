@@ -1,11 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./main.css";
 import Camera from "../../assets/icons/camera.png";
 import mic from "../../assets/icons/mic.png";
 import phone from "../../assets/icons/phone.png";
-import { FaceMesh } from "@mediapipe/face_mesh";
-import * as Facemesh from "@mediapipe/face_mesh";
 
 let APP_ID = "7d1754924930464fb10e4130707ee1d6";
 
@@ -29,6 +27,7 @@ const servers = {
 
 let constraints = {
   video: {
+    facingMode: "user",
     width: { min: 640, ideal: 1920, max: 1920 },
     height: { min: 480, ideal: 1080, max: 1080 },
   },
@@ -37,8 +36,6 @@ let constraints = {
 
 const Call = () => {
   const { roomId } = useParams();
-  const canvasRef = useRef(null);
-  const connect = window.drawConnectors;
 
   useEffect(async () => {
     client = window.AgoraRTM.createInstance(APP_ID, {
@@ -54,8 +51,33 @@ const Call = () => {
 
     client.on("MessageFromPeer", handleMessageFromPeer);
 
-    localStream = await navigator.mediaDevices.getUserMedia(constraints);
-    document.getElementById("user-1").srcObject = localStream;
+    await navigator.permissions
+      .query({ name: "microphone" })
+      .then((permissionObj) => {
+        console.log(permissionObj.state);
+      })
+      .catch((error) => {
+        console.log("Got error :", error);
+      });
+
+    navigator.permissions
+      .query({ name: "camera" })
+      .then((permissionObj) => {
+        console.log(permissionObj.state);
+      })
+      .catch((error) => {
+        console.log("Got error :", error);
+      });
+
+    await navigator.mediaDevices
+      .getUserMedia(constraints)
+      .then((stream) => {
+        localStream = stream;
+        document.getElementById("user-1").srcObject = localStream;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   });
 
   const handleUserLeft = (MemberId) => {
@@ -91,7 +113,7 @@ const Call = () => {
 
     remoteStream = new MediaStream();
     document.getElementById("user-2").srcObject = remoteStream;
-    document.getElementById("user-2").style.display = "none";
+    document.getElementById("user-2").style.display = "block";
 
     document.getElementById("user-1").classList.add("smallFrame");
 
@@ -111,35 +133,6 @@ const Call = () => {
       event.streams[0].getTracks().forEach((track) => {
         remoteStream.addTrack(track);
       });
-
-      if (remoteStream.active) {
-        const faceMesh = new FaceMesh({
-          locateFile: (file) => {
-            return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
-          },
-        });
-        faceMesh.setOptions({
-          maxNumFaces: 1,
-          minDetectionConfidence: 0.5,
-          minTrackingConfidence: 0.5,
-        });
-        faceMesh.onResults(onResults);
-        async function onFrame() {
-          if (
-            !document.getElementById("user-2").paused &&
-            !document.getElementById("user-2").ended
-          ) {
-            await faceMesh.send({
-              image: document.getElementById("user-2"),
-            });
-            // https://stackoverflow.com/questions/65144038/how-to-use-requestanimationframe-with-promise
-            await new Promise(requestAnimationFrame);
-            onFrame();
-          } else setTimeout(onFrame, 500);
-        }
-        document.getElementById("user-2").play();
-        onFrame();
-      }
     };
 
     peerConnection.onicecandidate = async (event) => {
@@ -226,56 +219,6 @@ const Call = () => {
     }
   };
 
-  function onResults(results) {
-    // const video = webcamRef.current.video;
-    const videoWidth = document.getElementById("user-2").videoWidth;
-    const videoHeight = document.getElementById("user-2").videoHeight;
-
-    // Set canvas width
-    canvasRef.current.width = videoWidth;
-    canvasRef.current.height = videoHeight;
-
-    const canvasElement = canvasRef.current;
-    const canvasCtx = canvasElement.getContext("2d");
-    canvasCtx.save();
-    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-    canvasCtx.drawImage(
-      results.image,
-      0,
-      0,
-      canvasElement.width,
-      canvasElement.height
-    );
-
-    if (results.multiFaceLandmarks) {
-      for (const landmarks of results.multiFaceLandmarks) {
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_TESSELATION, {
-          color: "#C0C0C070",
-          lineWidth: 1,
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_RIGHT_EYE, {
-          color: "#FF3030",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_RIGHT_EYEBROW, {
-          color: "#FF3030",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_LEFT_EYE, {
-          color: "#30FF30",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_LEFT_EYEBROW, {
-          color: "#30FF30",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_FACE_OVAL, {
-          color: "#E0E0E0",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_LIPS, {
-          color: "#E0E0E0",
-        });
-      }
-    }
-    canvasCtx.restore();
-  }
-
   return (
     <>
       <div id="videos">
@@ -291,8 +234,6 @@ const Call = () => {
           autoPlay
           playsInline
         ></video>
-
-        <canvas ref={canvasRef} className="video-player"></canvas>
       </div>
       <div id="controls">
         <div
@@ -307,7 +248,7 @@ const Call = () => {
           <img src={mic} />
         </div>
 
-        <a href="lobby.html">
+        <a href="/">
           <div
             className="control-container"
             id="leave-btn"

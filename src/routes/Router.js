@@ -22,6 +22,8 @@ const FMesh = lazy(() => import("../views/FMesh"));
 const HandD = lazy(() => import("../views/HandD"));
 const Holistic = lazy(() => import("../views/Holistic"));
 const Objectron = lazy(() => import("../views/Objectron"));
+const SelfieSegmentation = lazy(() => import("../views/SelfieSegmentation"));
+const SpeechRecognition = lazy(() => import("../views/SpeechRecognition"));
 
 /*****Routes******/
 
@@ -37,6 +39,16 @@ const ThemeRoutes = [
       { path: "/hands", exact: true, element: <HandD /> },
       { path: "/holistic", exact: true, element: <Holistic /> },
       { path: "/objectron", exact: true, element: <Objectron /> },
+      {
+        path: "/selfiesegmentation",
+        exact: true,
+        element: <SelfieSegmentation />,
+      },
+      {
+        path: "/speechrecognition",
+        exact: true,
+        element: <SpeechRecognition />,
+      },
       { path: "/call/:roomId", exact: true, element: <VideoCall /> },
       { path: "/about", exact: true, element: <About /> },
       { path: "/alerts", exact: true, element: <Alerts /> },

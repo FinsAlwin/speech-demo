@@ -12,7 +12,17 @@ const navigation = [
   { title: "Face Mesh", href: "/faceMesh", icon: "bi-person-circle" },
   { title: "Hand Mapping", href: "/hands", icon: "bi-hand-index" },
   { title: "Holistic", href: "/holistic", icon: "bi-triangle" },
-  { title: "Objectron", href: "/objectron", icon: "bi-hexagon" },
+  {
+    title: "Selfie Segmentation",
+    href: "/selfiesegmentation",
+    icon: "bi-triangle",
+  },
+  // { title: "Objectron", href: "/objectron", icon: "bi-hexagon" },
+  {
+    title: "Speech Recognition",
+    href: "/speechrecognition",
+    icon: "bi-hexagon",
+  },
 ];
 
 const Sidebar = () => {

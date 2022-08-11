@@ -1,9 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
-import { FaceMesh } from "@mediapipe/face_mesh";
-import * as Facemesh from "@mediapipe/face_mesh";
-import { Card, Button, Row, Col } from "reactstrap";
 
-const FMesh = () => {
+import { Card, Button, Row, Col } from "reactstrap";
+import { SelfieSegmentation } from "@mediapipe/selfie_segmentation";
+import * as Selfiesegmentation from "@mediapipe/selfie_segmentation";
+import img from "../assets/images/bg/bg1.jpg";
+
+const SelfieSegmentationA = () => {
   const [camera, setCamera] = useState(false);
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
@@ -22,39 +24,31 @@ const FMesh = () => {
     const canvasCtx = canvasElement.getContext("2d");
     canvasCtx.save();
     canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-    canvasCtx.drawImage(
-      results.image,
-      0,
-      0,
-      canvasElement.width,
-      canvasElement.height
-    );
 
-    if (results.multiFaceLandmarks) {
-      for (const landmarks of results.multiFaceLandmarks) {
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_TESSELATION, {
-          color: "#C0C0C070",
-          lineWidth: 1,
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_RIGHT_EYE, {
-          color: "#FF3030",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_RIGHT_EYEBROW, {
-          color: "#FF3030",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_LEFT_EYE, {
-          color: "#30FF30",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_LEFT_EYEBROW, {
-          color: "#30FF30",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_FACE_OVAL, {
-          color: "#E0E0E0",
-        });
-        connect(canvasCtx, landmarks, Facemesh.FACEMESH_LIPS, {
-          color: "#E0E0E0",
-        });
-      }
+    if (results.segmentationMask) {
+      canvasCtx.drawImage(
+        results.segmentationMask,
+        0,
+        0,
+        canvasElement.width,
+        canvasElement.height
+      );
+
+      // Only overwrite existing pixels.
+      canvasCtx.globalCompositeOperation = "source-out";
+      canvasCtx.fillStyle = "#00FF00";
+      //   canvasCtx.createPattern(img, "repeat");
+      canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
+
+      // Only overwrite missing pixels.
+      canvasCtx.globalCompositeOperation = "lighter";
+      canvasCtx.drawImage(
+        results.image,
+        0,
+        0,
+        canvasElement.width,
+        canvasElement.height
+      );
     }
     canvasCtx.restore();
   }
@@ -83,23 +77,19 @@ const FMesh = () => {
   };
 
   const runNN = () => {
-    const faceMesh = new FaceMesh({
+    const selfieSegmentation = new SelfieSegmentation({
       locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`;
       },
     });
-
-    faceMesh.setOptions({
-      maxNumFaces: 1,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5,
+    selfieSegmentation.setOptions({
+      modelSelection: 1,
     });
-
-    faceMesh.onResults(onResults);
+    selfieSegmentation.onResults(onResults);
 
     async function onFrame() {
       if (!webcamRef?.current?.paused && !webcamRef?.current?.ended) {
-        await faceMesh.send({
+        await selfieSegmentation.send({
           image: webcamRef.current,
         });
         // https://stackoverflow.com/questions/65144038/how-to-use-requestanimationframe-with-promise
@@ -140,4 +130,4 @@ const FMesh = () => {
   );
 };
 
-export default FMesh;
+export default SelfieSegmentationA;

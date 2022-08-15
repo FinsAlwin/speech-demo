@@ -30,6 +30,9 @@
     "react-speech-recognition": "^3.9.1",
     "react-webcam": "^7.0.1",
     "reactstrap": "^9.0.0",
+    "socket.io": "^4.5.1",
+    "socket.io-client": "^4.5.1",
+    "styled-components": "^5.3.5",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

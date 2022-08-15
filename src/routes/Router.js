@@ -24,7 +24,7 @@ const Holistic = lazy(() => import("../views/Holistic"));
 const Objectron = lazy(() => import("../views/Objectron"));
 const SelfieSegmentation = lazy(() => import("../views/SelfieSegmentation"));
 const SpeechRecognition = lazy(() => import("../views/SpeechRecognition"));
-
+const GameSession = lazy(() => import("../views/game/GameSession"));
 /*****Routes******/
 
 const ThemeRoutes = [
@@ -50,6 +50,12 @@ const ThemeRoutes = [
         element: <SpeechRecognition />,
       },
       { path: "/call/:roomId", exact: true, element: <VideoCall /> },
+      { path: "/snake", exact: true, element: <GameSession /> },
+      {
+        path: "/snake/:sessionId/:roomId",
+        exact: true,
+        element: <GameSession />,
+      },
       { path: "/about", exact: true, element: <About /> },
       { path: "/alerts", exact: true, element: <Alerts /> },
       { path: "/badges", exact: true, element: <Badges /> },

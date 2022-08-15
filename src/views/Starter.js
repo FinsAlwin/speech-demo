@@ -9,6 +9,14 @@ import bg4 from "../assets/images/bg/bg4.jpg";
 const BlogData = [
   {
     image: bg1,
+    title: "Snake Game",
+    subtitle: "game share",
+    description: "Game share",
+    btnbg: "primary",
+    link: "/snake",
+  },
+  {
+    image: bg1,
     title: "Video Call",
     subtitle: "Peer to peer demo",
     description:

@@ -50,8 +50,7 @@ const GameSession = () => {
                   <VideoCall roomId={room} s={handleRemoteStream} />
                 </Col>
               </Row>
-              <hr />
-              &nbsp;
+
               <Row>
                 <Col md="6" lg="6">
                   <Card body color="danger" inverse>

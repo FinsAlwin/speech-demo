@@ -129,7 +129,7 @@ const VideoCall = (props) => {
     if (!localStream) {
       localStream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: false,
+        audio: true,
       });
       document.getElementById("user-1").srcObject = localStream;
     }
@@ -239,6 +239,7 @@ const VideoCall = (props) => {
             id="user-1"
             autoPlay
             playsInline
+            muted
           ></video>
         </Card>
         &nbsp; &nbsp;

@@ -38,7 +38,7 @@ const Snake = (props) => {
   const init = () => {
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
-    canvas.width = canvas.height = 400;
+    canvas.width = canvas.height = 350;
     ctx.fillStyle = BG_COLOUR;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     document.addEventListener("keydown", keydown);

@@ -104,17 +104,11 @@ const Analysis = (props) => {
   return (
     <>
       <Row>
-        <Card>
-          <video ref={webcamRef} style={{ display: "none" }}></video>
-        </Card>
+        <video ref={webcamRef} style={{ display: "none" }}></video>
       </Row>
 
       <Row>
-        <Container>
-          <Card body color="info" inverse>
-            <canvas ref={canvasRef}></canvas>
-          </Card>
-        </Container>
+        <canvas ref={canvasRef}></canvas>
       </Row>
     </>
   );

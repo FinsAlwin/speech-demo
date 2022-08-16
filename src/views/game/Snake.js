@@ -67,10 +67,9 @@ const Snake = (props) => {
   };
 
   const restartGame = (data) => {
-    setGameCode(data.gameCode);
-
     if (props.sessionId) {
       joinGame();
+      window.location.reload();
     }
   };
 
@@ -114,7 +113,7 @@ const Snake = (props) => {
     data = JSON.parse(data);
 
     if (data.winner === 1) {
-      // socket.emit("gameReset", { gameCode });
+      setGameOver(true);
     }
   };
 
@@ -133,6 +132,7 @@ const Snake = (props) => {
 
   const resetGame = () => {
     socket.emit("gameReset", { gameCode });
+    setGameOver(false);
     init();
   };
 
@@ -144,7 +144,15 @@ const Snake = (props) => {
             Total Points: <span>{state?.players[1]?.points}</span>
           </h5>
           <canvas id="canvas"></canvas>
-          {playerNumber === 1 && <Button onClick={resetGame}>Reset</Button>}
+          {gameOver && (
+            <>
+              {playerNumber === 1 && (
+                <>
+                  <Button onClick={resetGame}>Reset</Button>
+                </>
+              )}
+            </>
+          )}
         </div>
       </Container>
     </>

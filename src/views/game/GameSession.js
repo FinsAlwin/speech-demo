@@ -47,12 +47,6 @@ const GameSession = () => {
             <>
               <Row>
                 <Col md="6" lg="6">
-                  <VideoCall roomId={room} s={handleRemoteStream} />
-                </Col>
-              </Row>
-
-              <Row>
-                <Col md="6" lg="6">
                   <Card body color="danger" inverse>
                     <Snake player={1} game={gameCode} />
                     <FormGroup>
@@ -69,10 +63,14 @@ const GameSession = () => {
 
                   {/* <span>{`${window.location.href}/${gameCode}`}</span> */}
                 </Col>
-
                 <Col md="6" lg="6">
+                  <VideoCall roomId={room} s={handleRemoteStream} />
                   {stream && <Analysis rs={stream} />}
                 </Col>
+
+                {/* <Col md="6" lg="6">
+                  {stream && <Analysis rs={stream} />}
+                </Col> */}
               </Row>
             </>
           )}
@@ -80,15 +78,16 @@ const GameSession = () => {
       )}
       {sessionId && roomId && (
         <>
-          <Row>
-            <VideoCall roomId={roomId} s={handleRemoteStream} />
-          </Row>
-          <hr />
           &nbsp;
           <Row>
-            <Card body color="success" inverse>
-              <Snake player={2} game={sessionId} sessionId={sessionId} />
-            </Card>
+            <Col md="6" lg="6">
+              <Card body color="success" inverse>
+                <Snake player={2} game={sessionId} sessionId={sessionId} />
+              </Card>
+            </Col>
+            <Col md="6" lg="6">
+              <VideoCall roomId={roomId} s={handleRemoteStream} />
+            </Col>
           </Row>
         </>
       )}

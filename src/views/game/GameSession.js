@@ -54,7 +54,7 @@ const GameSession = () => {
               <Row>
                 <Col md="6" lg="6">
                   <Card body color="danger" inverse>
-                    <Snake player={playerNumber} game={gameCode} />
+                    <Snake player={1} game={gameCode} />
                     <FormGroup>
                       <Label for="exampleEmail">Game Link</Label>
                       <Input
@@ -87,11 +87,7 @@ const GameSession = () => {
           &nbsp;
           <Row>
             <Card body color="success" inverse>
-              <Snake
-                player={playerNumber}
-                game={sessionId}
-                sessionId={sessionId}
-              />
+              <Snake player={2} game={sessionId} sessionId={sessionId} />
             </Card>
           </Row>
         </>

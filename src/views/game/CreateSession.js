@@ -3,21 +3,25 @@ import { SocketContext } from "./socket";
 import { Button } from "reactstrap";
 
 const CreateSession = (props) => {
+  const [roomId, setRoomId] = useState(null);
   const socket = useContext(SocketContext);
 
   useEffect(() => {
     socket.on("init", handleInit);
     socket.on("gameCode", handleGameCode);
-  }, []);
+    if (!roomId) {
+      setRoomId(makeid);
+    }
+  }, [roomId]);
 
   const handleInit = (number) => {
-    console.log(number);
     props.playerNumber(number);
   };
 
-  const handleGameCode = (gameCode) => {
+  const handleGameCode = async (gameCode) => {
     props.gameCode(gameCode);
-    props.roomId(makeid);
+
+    props.roomId(roomId);
   };
 
   const newGame = () => {

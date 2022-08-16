@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Row, Col, Card, Container } from "reactstrap";
+import {
+  Row,
+  Col,
+  Card,
+  Container,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+} from "reactstrap";
 import { SocketContext } from "./socket";
 const BG_COLOUR = "#231f20";
 const SNAKE_COLOUR = "#c2c2c2";
@@ -11,6 +21,7 @@ const Snake = (props) => {
   const [gameCode, setGameCode] = useState(props.game);
   const [gameActive, setGameActive] = useState(false);
   const [state, setState] = useState();
+  const [gameOver, setGameOver] = useState(false);
 
   const socket = useContext(SocketContext);
 
@@ -33,6 +44,7 @@ const Snake = (props) => {
     socket.on("gameOver", handleGameOver);
     socket.on("unknownCode", handleUnknownCode);
     socket.on("tooManyPlayers", handleTooManyPlayers);
+    socket.on("reset", restartGame);
   }, [gameActive]);
 
   const init = () => {
@@ -52,6 +64,14 @@ const Snake = (props) => {
   const joinGame = () => {
     socket.emit("joinGame", gameCode);
     init();
+  };
+
+  const restartGame = (data) => {
+    setGameCode(data.gameCode);
+
+    if (props.sessionId) {
+      joinGame();
+    }
   };
 
   const paintGame = (state) => {
@@ -87,32 +107,33 @@ const Snake = (props) => {
     requestAnimationFrame(() => paintGame(gameState));
   };
 
-  const handleGameOver = (data) => {
+  const handleGameOver = async (data) => {
     if (!gameActive) {
       return;
     }
     data = JSON.parse(data);
 
-    setGameActive(false);
-
-    if (data.winner === 2) {
-      alert("You Win!");
+    if (data.winner === 1) {
+      // socket.emit("gameReset", { gameCode });
     }
   };
 
   const handleUnknownCode = () => {
     reset();
-    alert("Unknown Game Code");
   };
 
   const handleTooManyPlayers = () => {
     reset();
-    alert("This game is already in progress");
   };
 
   const reset = () => {
     setPlayerNumber();
     setGameCode();
+  };
+
+  const resetGame = () => {
+    socket.emit("gameReset", { gameCode });
+    init();
   };
 
   return (
@@ -123,6 +144,7 @@ const Snake = (props) => {
             Total Points: <span>{state?.players[1]?.points}</span>
           </h5>
           <canvas id="canvas"></canvas>
+          {playerNumber === 1 && <Button onClick={resetGame}>Reset</Button>}
         </div>
       </Container>
     </>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./main.css";
+
 import { Row, Col, Card, FormGroup, Label, Input } from "reactstrap";
 import Camera from "../../assets/icons/camera.png";
 import mic from "../../assets/icons/mic.png";
@@ -56,19 +57,19 @@ const VideoCall = (props) => {
       await navigator.permissions
         .query({ name: "microphone" })
         .then((permissionObj) => {
-          console.log(permissionObj.state);
+          // console.log(permissionObj.state);
         })
         .catch((error) => {
-          console.log("Got error :", error);
+          // console.log("Got error :", error);
         });
 
       navigator.permissions
         .query({ name: "camera" })
         .then((permissionObj) => {
-          console.log(permissionObj.state);
+          // console.log(permissionObj.state);
         })
         .catch((error) => {
-          console.log("Got error :", error);
+          // console.log("Got error :", error);
         });
 
       await navigator.mediaDevices
@@ -78,7 +79,7 @@ const VideoCall = (props) => {
           document.getElementById("user-1").srcObject = localStream;
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     }
   }, [props.roomId]);
@@ -113,7 +114,7 @@ const VideoCall = (props) => {
   };
 
   const handleUserJoined = async (MemberId) => {
-    console.log("A new user joined the channel:", MemberId);
+    // console.log("A new user joined the channel:", MemberId);
     createOffer(MemberId);
   };
 

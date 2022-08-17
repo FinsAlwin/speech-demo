@@ -50,7 +50,10 @@ const VideoCall = (props) => {
       await channel.join();
 
       channel.on("MemberJoined", handleUserJoined);
-      channel.on("MemberLeft", handleUserLeft);
+      channel.on("MemberLeft", async () => {
+        console.log(channel);
+        handleUserLeft();
+      });
 
       client.on("MessageFromPeer", handleMessageFromPeer);
 

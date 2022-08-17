@@ -65,7 +65,7 @@ const GameSession = () => {
                 </Col>
                 <Col md="6" lg="6">
                   <VideoCall roomId={room} s={handleRemoteStream} />
-                  {stream && <Analysis rs={stream} />}
+                  {/* {stream && <Analysis rs={stream} />} */}
                 </Col>
 
                 {/* <Col md="6" lg="6">
